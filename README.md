@@ -35,36 +35,6 @@ For development or testing purposes:
 # Clone the repository
 git clone https://github.com/your-username/SIA-CE-code.git
 cd SIA-CE-code
-
-# Install in development mode
-pip install -e .
-```
-
-### Virtual Environment (Recommended)
-
-It's recommended to use a virtual environment to avoid package conflicts:
-
-```bash
-# Create virtual environment
-python -m venv sia_ce_env
-
-# Activate virtual environment
-# On Windows:
-sia_ce_env\Scripts\activate
-# On Unix/macOS:
-source sia_ce_env/bin/activate
-
-# Install the package
-pip install sia-ce-code
-```
-
-### Verifying Installation
-
-Test your installation:
-
-```python
-import sia_ce
-print(sia_ce.__version__)
 ```
 
 ### Prerequisites
@@ -74,25 +44,16 @@ print(sia_ce.__version__)
 - Windows 7 or higher (required for Chemstation integration)
 - Properly configured CE instrument connected to Chemstation
 
-## Quick Start
-
-```python
-import sia_ce
-
-# Basic package initialization
-# Detailed examples will be added as development progresses
-```
-
 ## System Requirements
 
 ### Software Requirements
-- Windows 7/8/10/11
+- Windows 7+
 - Agilent Chemstation (specific version compatibility documentation in progress)
 - Python 3.7+
 
 ### Hardware Requirements
-- Agilent CE instrument (supported models list to be updated)
-- Computer with Chemstation installation
+- Agilent CE instrument (CE 7100)
+- Chemstation
 - Proper instrument-computer connectivity
 
 ## API Overview
@@ -116,21 +77,6 @@ This package communicates with CE instruments through Agilent Chemstation softwa
 - Communication protocols configured
 
 *Detailed setup instructions will be provided in future documentation updates.*
-
-## Future Development
-
-### Planned Features
-- **SIA System Integration**: Complete sample preparation automation
-- **Enhanced Method Library**: Pre-built analytical protocols
-- **Advanced Data Processing**: Built-in data analysis tools
-- **GUI Interface**: Optional graphical user interface for non-programmers
-
-## Project Status
-
-This project is under active development. Core Chemstation integration is being implemented, with SIA system integration planned for future releases.
-
-**Current Phase**: Chemstation API development
-**Next Phase**: SIA system integration planning
 
 ## Contributing
 
