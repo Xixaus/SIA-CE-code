@@ -576,15 +576,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Protocol Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       How It Works
@@ -598,15 +589,6 @@
   <a href="#communication-flow" class="md-nav__link">
     <span class="md-ellipsis">
       Communication Flow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Components
     </span>
   </a>
   
@@ -640,15 +622,6 @@
   <a href="#commands-with-return-values" class="md-nav__link">
     <span class="md-ellipsis">
       Commands with Return Values
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#module-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Module Commands
     </span>
   </a>
   
@@ -691,15 +664,6 @@
   <a href="#enable-verbose-mode" class="md-nav__link">
     <span class="md-ellipsis">
       Enable Verbose Mode
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#manual-file-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual File Monitoring
     </span>
   </a>
   
@@ -824,15 +788,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      Best Practices
-    </span>
-  </a>
   
 </li>
       
@@ -1432,15 +1387,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Protocol Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       How It Works
@@ -1454,15 +1400,6 @@
   <a href="#communication-flow" class="md-nav__link">
     <span class="md-ellipsis">
       Communication Flow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Components
     </span>
   </a>
   
@@ -1496,15 +1433,6 @@
   <a href="#commands-with-return-values" class="md-nav__link">
     <span class="md-ellipsis">
       Commands with Return Values
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#module-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Module Commands
     </span>
   </a>
   
@@ -1547,15 +1475,6 @@
   <a href="#enable-verbose-mode" class="md-nav__link">
     <span class="md-ellipsis">
       Enable Verbose Mode
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#manual-file-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual File Monitoring
     </span>
   </a>
   
@@ -1683,15 +1602,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      Best Practices
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1713,16 +1623,9 @@
 
 <h1 id="file-based-communication-protocol">File-Based Communication Protocol</h1>
 <p>Understanding how Python communicates with ChemStation is crucial for troubleshooting and advanced usage. This page explains the file-based protocol that enables reliable command execution.</p>
-<h2 id="protocol-overview">Protocol Overview</h2>
-<p>The SIA-CE package communicates with ChemStation through a file-based protocol rather than direct API calls. This approach provides several advantages:</p>
-<ul>
-<li>✅ <strong>Reliability</strong>: File operations are atomic and less prone to corruption</li>
-<li>✅ <strong>Debugging</strong>: Commands and responses can be monitored in real-time</li>
-<li>✅ <strong>Compatibility</strong>: Works across different ChemStation versions</li>
-<li>✅ <strong>Asynchronous</strong>: Python and ChemStation run independently</li>
-</ul>
 <h2 id="how-it-works">How It Works</h2>
 <h3 id="communication-flow">Communication Flow</h3>
+<p>tady popiš jak to funguje, mám na to obrázek, nějak tam napiš že je to převzato a upraveno z https://github.com/croningp/analyticallabware/tree/master/AnalyticalLabware/devices/Agilent, mám to anpsáno i v k´du</p>
 <pre class="mermaid"><code>sequenceDiagram
     participant Python
     participant CommandFile
@@ -1736,37 +1639,6 @@
     ChemStation--&gt;&gt;Macro: Return result
     Macro-&gt;&gt;ResponseFile: Write "1 None"
     Python-&gt;&gt;ResponseFile: Read response</code></pre>
-<h3 id="key-components">Key Components</h3>
-<ol>
-<li><strong>Command File</strong> (<code>communication_files/command</code>)</li>
-<li>Python writes numbered commands</li>
-<li>Format: <code>&lt;command_number&gt; &lt;command_string&gt;</code></li>
-<li>
-<p>Example: <code>42 response$ = _METHPATH$</code></p>
-</li>
-<li>
-<p><strong>Response File</strong> (<code>communication_files/response</code>)</p>
-</li>
-<li>ChemStation writes numbered responses</li>
-<li>Format: <code>&lt;command_number&gt; &lt;response_string&gt;</code></li>
-<li>
-<p>Example: <code>42 C:\Chem32\1\Methods\</code></p>
-</li>
-<li>
-<p><strong>ChemStation Macro</strong> (<code>ChemPyConnect.mac</code>)</p>
-</li>
-<li>Monitors command file continuously</li>
-<li>Executes commands via ChemStation Command Processor</li>
-<li>
-<p>Writes responses back</p>
-</li>
-<li>
-<p><strong>Python Communicator</strong> (<code>chemstation_communication.py</code>)</p>
-</li>
-<li>Manages command numbering</li>
-<li>Handles timeouts and retries</li>
-<li>Parses responses</li>
-</ol>
 <h2 id="command-format">Command Format</h2>
 <h3 id="basic-commands">Basic Commands</h3>
 <p>Commands without return values:</p>
@@ -1790,17 +1662,6 @@
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Response file content</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="mi">124</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Chem32</span>\<span class="mi">1</span>\<span class="n">Methods</span>\<span class="n">CE</span>\
 </code></pre></div>
-<h3 id="module-commands">Module Commands</h3>
-<p>Sending commands to instrument modules:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Python code</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;WriteModule &quot;CE1&quot;, &quot;FLSH 60.0,-2,-2&quot;&#39;</span><span class="p">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Command file content</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="mi">125</span> <span class="n">WriteModule</span> <span class="s2">&quot;CE1&quot;</span><span class="p">,</span> <span class="s2">&quot;FLSH 60.0,-2,-2&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Response file content</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="mi">125</span> <span class="kc">None</span>
-</code></pre></div>
 <h2 id="command-numbering">Command Numbering</h2>
 <p>The protocol uses sequential command numbers to match responses with requests:</p>
 <ul>
@@ -1809,63 +1670,56 @@
 <li>Ensures each command gets its correct response</li>
 <li>Prevents mixing responses from multiple commands</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example of command numbering in action</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="mi">1</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">_METHPATH</span><span class="err">$</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="mi">2</span> <span class="n">LoadMethod</span> <span class="n">_METHPATH</span><span class="err">$</span><span class="p">,</span> <span class="n">Test</span><span class="o">.</span><span class="n">M</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="mi">3</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">VAL</span><span class="err">$</span><span class="p">(</span><span class="n">_MethodOn</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">...</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="mi">256</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">ACQSTATUS</span><span class="err">$</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="mi">1</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">_DATAPATH</span><span class="err">$</span>  <span class="c1"># Wraps around</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example of command numbering in action</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="mi">1</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">_METHPATH</span><span class="err">$</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="mi">2</span> <span class="n">LoadMethod</span> <span class="n">_METHPATH</span><span class="err">$</span><span class="p">,</span> <span class="n">Test</span><span class="o">.</span><span class="n">M</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="mi">3</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">VAL</span><span class="err">$</span><span class="p">(</span><span class="n">_MethodOn</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">...</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="mi">256</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">ACQSTATUS</span><span class="err">$</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="mi">1</span> <span class="n">response</span><span class="err">$</span> <span class="o">=</span> <span class="n">_DATAPATH</span><span class="err">$</span>  <span class="c1"># Wraps around</span>
 </code></pre></div>
 <h2 id="file-locations">File Locations</h2>
 <p>Default file locations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SIA-CE/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── ChemstationAPI/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    └── core/
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        ├── ChemPyConnect.mac          # Macro file
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        └── communication_files/       # Communication directory
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            ├── command               # Command file
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>            └── response              # Response file
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SIA-CE/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>└── ChemstationAPI/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    └── core/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        ├── ChemPyConnect.mac          # Macro file
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        └── communication_files/       # Communication directory
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            ├── command               # Command file
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            └── response              # Response file
 </code></pre></div>
 <h2 id="monitoring-communication">Monitoring Communication</h2>
 <h3 id="enable-verbose-mode">Enable Verbose Mode</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ChemstationAPI.core.communication_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationConfig</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">CommunicationConfig</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">api</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Now all commands and responses are printed</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;response$ = _METHPATH$&quot;</span><span class="p">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Output:</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Sending command 1: response$ = _METHPATH$</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Received response 1: C:\Chem32\1\Methods\CE\</span>
-</code></pre></div>
-<h3 id="manual-file-monitoring">Manual File Monitoring</h3>
-<p>You can monitor files directly during debugging:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Windows PowerShell - Monitor command file</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Get-Content<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;communication_files\command&quot;</span><span class="w"> </span>-Wait
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Windows PowerShell - Monitor response file  </span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Get-Content<span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;communication_files\response&quot;</span><span class="w"> </span>-Wait
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ChemstationAPI.core.communication_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationConfig</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">CommunicationConfig</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">api</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Now all commands and responses are printed</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;response$ = _METHPATH$&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Output:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Sending command 1: response$ = _METHPATH$</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Received response 1: C:\Chem32\1\Methods\CE\</span>
 </code></pre></div>
 <h2 id="error-handling">Error Handling</h2>
 <h3 id="timeout-handling">Timeout Handling</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Increase timeout for long operations</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;RunMethod _DATAPATH$,, Sample001&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Increase timeout for long operations</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;RunMethod _DATAPATH$,, Sample001&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="error-responses">Error Responses</h3>
-<p>ChemStation errors are detected and raised as exceptions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;InvalidCommand&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">except</span> <span class="n">ChemstationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="c1"># Output: Error: ChemStation command failed: ERROR: The command InvalidCommand failed to execute</span>
+<p>ChemStation errors are detected and raised as exceptions:
+tady hod ukázku, ž když napíšeš blbost, tak ti to vyhodí chybu</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;InvalidCommand&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">except</span> <span class="n">ChemstationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="c1"># Output: Error: ChemStation command failed: ERROR: The command InvalidCommand failed to execute</span>
 </code></pre></div>
 <h2 id="macro-initialization">Macro Initialization</h2>
 <p>The ChemStation macro must be running for communication to work:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&#39; ChemStation command line
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>macro &quot;C:\path\to\ChemPyConnect.mac&quot;; Python_Run
-</code></pre></div>
+<p>ChemStation command processor:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>macro &quot;C:\path\to\ChemPyConnect.mac&quot;; Python_Run
+</code></pre></div></p>
 <p>The macro runs in a continuous loop:
 1. Reads command file every 200ms
 2. Executes new commands (higher number than last)
@@ -1873,17 +1727,17 @@
 4. Continues until "Exit" command</p>
 <h2 id="advanced-configuration">Advanced Configuration</h2>
 <h3 id="custom-configuration">Custom Configuration</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ChemstationAPI.core.communication_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationConfig</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">CommunicationConfig</span><span class="p">(</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">comm_dir</span><span class="o">=</span><span class="s2">&quot;custom/path&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">max_command_number</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">retry_delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">default_timeout</span><span class="o">=</span><span class="mf">10.0</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">api</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ChemstationAPI.core.communication_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationConfig</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">CommunicationConfig</span><span class="p">(</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">comm_dir</span><span class="o">=</span><span class="s2">&quot;custom/path&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">max_command_number</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">retry_delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">default_timeout</span><span class="o">=</span><span class="mf">10.0</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">api</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="configuration-options">Configuration Options</h3>
 <table>
@@ -1946,38 +1800,6 @@
 1. Reduce retry_delay in configuration
 2. Check disk performance
 3. Ensure antivirus isn't scanning communication files</p>
-<h2 id="best-practices">Best Practices</h2>
-<ol>
-<li><strong>Always Start Fresh</strong></li>
-<li>Delete old command/response files before starting</li>
-<li>
-<p>Macro automatically creates new files</p>
-</li>
-<li>
-<p><strong>Use Appropriate Timeouts</strong></p>
-</li>
-<li>Short operations: 5-10 seconds</li>
-<li>Method execution: 30+ seconds</li>
-<li>
-<p>File operations: 10-15 seconds</p>
-</li>
-<li>
-<p><strong>Handle Errors Gracefully</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;response$ = _METHPATH$&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ChemStation not responding&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">except</span> <span class="n">ChemstationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Command failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Monitor During Development</strong></p>
-</li>
-<li>Enable verbose mode</li>
-<li>Watch communication files</li>
-<li>Check ChemStation command line for errors</li>
-</ol>
 <div class="admonition tip">
 <p class="admonition-title">Understanding the Protocol</p>
 <p>The file-based protocol might seem complex, but it's very reliable once properly configured. Most issues come from macro not running or incorrect file paths.</p>

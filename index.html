@@ -528,15 +528,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#who-should-use-this-package" class="md-nav__link">
-    <span class="md-ellipsis">
-      Who Should Use This Package?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#documentation-overview" class="md-nav__link">
     <span class="md-ellipsis">
       Documentation Overview
@@ -1373,15 +1364,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#who-should-use-this-package" class="md-nav__link">
-    <span class="md-ellipsis">
-      Who Should Use This Package?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#documentation-overview" class="md-nav__link">
     <span class="md-ellipsis">
       Documentation Overview
@@ -1483,19 +1465,23 @@
 <h2 id="key-features">Key Features</h2>
 <h3 id="chemstation-api">ChemStation API</h3>
 <ul>
-<li>Direct control of Agilent 7100 CE systems through ChemStation</li>
-<li>File-based communication protocol for reliable command execution</li>
-<li>Comprehensive method and sequence management</li>
-<li>Real-time instrument status monitoring</li>
-<li>Automated vial handling and capillary operations</li>
+<li><strong>Universal ChemStation Control</strong>: Compatible with any instrument controlled by ChemStation software</li>
+<li><strong>CE-Optimized Functions</strong>: While universally applicable, functions are specifically designed and optimized for capillary electrophoresis operations</li>
+<li><strong>Direct Command Processor Access</strong>: Commands sent directly to ChemStation command line for maximum flexibility</li>
+<li><strong>Robust Communication Protocol</strong>: Simple and reliable file-based communication system</li>
+<li><strong>Comprehensive Method Management</strong>: Complete CE method and sequence handling with advanced parameter control</li>
+<li><strong>Real-time Instrument Monitoring</strong>: Live status and progress tracking with detailed analytics</li>
+<li><strong>Easy Customization</strong>: Simple to extend or modify for specific applications and instrument configurations</li>
+<li><strong>Ready-to-Use Control Functions</strong>: Pre-programmed operations for common CE tasks and workflows</li>
 </ul>
 <h3 id="sia-api">SIA API</h3>
 <ul>
-<li>Precise syringe pump control (Hamilton MVP compatible)</li>
-<li>Multi-position valve automation (VICI compatible)</li>
-<li>Pre-built workflows for common operations</li>
-<li>Volume tracking and safety features</li>
-<li>Flexible port configuration</li>
+<li><strong>Precise Syringe Pump Control</strong>: Full automation of Cavro XP and Hamilton MVP series pumps with microliter precision</li>
+<li><strong>Multi-Position Valve Automation</strong>: Complete control of VICI and compatible valve selectors for fluid routing</li>
+<li><strong>Advanced Liquid Handling</strong>: Sophisticated aspiration, dispensing, and mixing operations with customizable parameters</li>
+<li><strong>Pre-Built Analytical Workflows</strong>: Ready-to-use methods for sample preparation, dilution, and homogenization</li>
+<li><strong>Volume Tracking &amp; Safety</strong>: Automatic volume monitoring with overflow protection and error recovery</li>
+<li><strong>Flexible Configuration</strong>: Customizable port assignments and operational parameters for different laboratory setups</li>
 </ul>
 <h3 id="integration-benefits">Integration Benefits</h3>
 <ul>
@@ -1507,28 +1493,28 @@
 <h2 id="quick-example">Quick Example</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ChemstationAPI</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemstationAPI</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">SIA_API.methods</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreparedSIAMethods</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Initialize systems</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">ce</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">()</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">sia</span> <span class="o">=</span> <span class="n">PreparedSIAMethods</span><span class="p">(</span><span class="n">ce</span><span class="p">,</span> <span class="n">syringe</span><span class="p">,</span> <span class="n">valve</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Automated workflow</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">sia</span><span class="o">.</span><span class="n">system_initialization_and_cleaning</span><span class="p">()</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">sia</span><span class="o">.</span><span class="n">continuous_fill</span><span class="p">(</span><span class="n">vial</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">solvent_port</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">ce</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">execution_method_with_parameters</span><span class="p">(</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">vial</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> 
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">method_name</span><span class="o">=</span><span class="s2">&quot;Protein_Analysis&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">sample_name</span><span class="o">=</span><span class="s2">&quot;BSA_Standard&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">SIA_API.devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">SyringeController</span><span class="p">,</span> <span class="n">ValveSelector</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Initialize systems</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">chemstation</span> <span class="o">=</span> <span class="n">ChemstationAPI</span><span class="p">()</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">syringe</span> <span class="o">=</span> <span class="n">SyringeController</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="s2">&quot;COM3&quot;</span><span class="p">,</span> <span class="n">syringe_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Cavro XP or Hamilton MVP</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">valve</span> <span class="o">=</span> <span class="n">ValveSelector</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="s2">&quot;COM4&quot;</span><span class="p">,</span> <span class="n">num_positions</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">sia</span> <span class="o">=</span> <span class="n">PreparedSIAMethods</span><span class="p">(</span><span class="n">chemstation</span><span class="p">,</span> <span class="n">syringe</span><span class="p">,</span> <span class="n">valve</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Automated workflow</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">sia</span><span class="o">.</span><span class="n">system_initialization_and_cleaning</span><span class="p">()</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">sia</span><span class="o">.</span><span class="n">prepare_batch_flow</span><span class="p">()</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">sia</span><span class="o">.</span><span class="n">batch_fill</span><span class="p">(</span><span class="n">vial</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">solvent_port</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">sia</span><span class="o">.</span><span class="n">homogenize_sample</span><span class="p">(</span><span class="n">vial</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">homogenization_time</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">chemstation</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">execution_method_with_parameters</span><span class="p">(</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">vial</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> 
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">method_name</span><span class="o">=</span><span class="s2">&quot;Protein_Analysis&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">sample_name</span><span class="o">=</span><span class="s2">&quot;BSA_Standard&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
 </code></pre></div>
-<h2 id="who-should-use-this-package">Who Should Use This Package?</h2>
-<p>This package is designed for:</p>
-<ul>
-<li><strong>Analytical Chemists</strong> working with CE and automated sample preparation</li>
-<li><strong>Research Scientists</strong> needing reproducible analytical workflows</li>
-<li><strong>Laboratory Managers</strong> looking to increase throughput and efficiency</li>
-<li><strong>Method Developers</strong> creating new analytical procedures</li>
-</ul>
 <h2 id="documentation-overview">Documentation Overview</h2>
 <p>This documentation is organized to help you quickly find what you need:</p>
 <ul>
@@ -1541,15 +1527,15 @@
 <h2 id="system-requirements">System Requirements</h2>
 <h3 id="hardware">Hardware</h3>
 <ul>
-<li>Agilent 7100 Capillary Electrophoresis System</li>
-<li>Hamilton MVP or compatible syringe pump</li>
+<li>Agilent 7100 Capillary Electrophoresis System (or other ChemStation-compatible instruments)</li>
+<li>Cavro XP or Hamilton MVP series syringe pump</li>
 <li>VICI or compatible valve selector</li>
-<li>Windows PC with available COM ports</li>
+<li>Windows PC with available COM ports or USB-to-RS232 adapters</li>
 </ul>
 <h3 id="software">Software</h3>
 <ul>
 <li>Windows 7 or higher</li>
-<li>Agilent ChemStation software</li>
+<li>Agilent OpenLab CDS ChemStation Edition</li>
 <li>Python 3.7+</li>
 <li>Required Python packages (see <a href="getting-started/">Getting Started</a>)</li>
 </ul>
