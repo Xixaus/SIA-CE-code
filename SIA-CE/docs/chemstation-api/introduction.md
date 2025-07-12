@@ -4,24 +4,28 @@
 
 The ChemStation API provides a Python interface for controlling Agilent ChemStation software and CE instruments. It enables automated control of capillary electrophoresis systems without manual intervention.
 
-Tady napiš, že to funguje na to, že se posílají příkazy do comandlinu. (command processor). Poté tam nějak zniň že to funguje na principu speciálního makra a pak se odkaž na další stránku, kde je to více popsáno. Něco tu napiš, že již jsou predpřipravené příkazy pro použití a že to příkazy mohou být využívány pro chemstation ale již to nefunguje na novějších OpenLAB CDS 2.x. Poté tam něco papiš, že je to přispůsoberno konkrétně pro použití na kapilární elktroforézy ale není problém si t upravit pro jakékolikv zařízení
+The API works by sending commands directly to ChemStation's Command Processor (CP) through a specialized communication protocol. Commands are sent from Python to ChemStation's command line interface, enabling direct control of all ChemStation functionality. This is achieved through a special macro system that monitors for Python commands and executes them within ChemStation - more details about this communication protocol can be found on the [File-Based Protocol](file-protocol.md) page.
+
+The API provides pre-built commands and methods for common operations, making it easy to automate complex analytical workflows. While these commands work with current ChemStation versions, please note that compatibility with newer OpenLAB CDS 2.x versions may be limited.
+
+The system is specifically optimized for capillary electrophoresis applications, but can be easily adapted for any instrument controlled by ChemStation software.
 
 ## Key Capabilities
 
 ### Instrument Control (CE)
-- Load and unload vials from carousel to analysis positions a zjištováná stavu pozic
-- aplikace tlaku na kapiláru (apply pressure a flush)
-- Monitor vial positions and system state
--
+- Load and unload vials from carousel to analysis positions
+- Monitor vial positions and system states
+- Apply pressure to capillary (pressure application and flushing)
+- Real-time system monitoring
 
 ### Method Management
 - Load existing methods
-- ukládání method
+- Save methods with modifications
 - Run methods with sample-specific information
-- monitoring
+- Progress monitoring and control
 
 ### Sequence Operations
-- Load and save sequence
+- Load and save sequences
 - Modify sequence tables
 - Import sequence tables from Excel
 - Control sequence execution (start/pause/resume)
@@ -33,36 +37,56 @@ Tady napiš, že to funguje na to, že se posílají příkazy do comandlinu. (c
 - System readiness validation
 
 ### Validation
-- validace různých věcí, jako exitence metod sequencí, obsazenost caouselu ,zda lze využít carousel,...
+- Validate method and sequence file existence
+- Check carousel occupancy and vial presence
+- Verify system readiness for operations
+- Pre-flight checks for automated workflows
 
 ## Architecture Overview
-
-Tady to není úplně přesné, na začátkuje python, pak je api, potí jsou mody, které následně jsou do filebase protokolu (low lelw api), které zapisuje do souborů a pak to jde do makra ale jde to tam obou straně, pak se odpovědi vraz zpět
 
 ```mermaid
 graph TD
     A[Python Application] --> B[ChemStation API]
-    B --> C[File-Based Protocol]
-    C --> D[ChemStation Macro]
-    D --> E[ChemStation Software]
-    E --> F[CE Instrument]
+    B --> C[Functional Modules]
+    C --> D[Low-Level File Protocol]
+    D --> E[Communication Files]
+    E --> F[ChemStation Macro]
+    F --> G[Command Processor]
+    G --> H[ChemStation Software]
+    H --> I[CE Instrument]
     
-    B --> G[CE Module]
-    B --> H[Methods Module]
-    B --> I[Sequence Module]
-    B --> J[System Module]
-    B --> K[Validation Module]
+    I --> H
+    H --> G
+    G --> F
+    F --> E
+    E --> D
+    D --> C
+    C --> B
+    B --> A
+    
+    C --> J[CE Module]
+    C --> K[Methods Module]
+    C --> L[Sequence Module]
+    C --> M[System Module]
+    C --> N[Validation Module]
 ```
 
 ## How It Works
 
-Funguje to tak, že se zadá pošle příkaz z pythonu, v daném modulu je přímo příkaz pro chemstation, tkerý se odešle přes lowlevel api do souboru a přes makro v chemstationu do command processoru, pošle se odpoved do soubru, který low level api přetě a odešle zpět do pythonu. Nějak tak
+The communication flow works as follows:
 
-1. **Communication Layer**: Uses file-based protocol for reliable command exchange
-2. **Module Organization**: Functionality divided into logical modules
-3. **Command Processing**: Commands sent to ChemStation's Command Processor
-4. **Response Handling**: Automatic response parsing and error detection
-5. **State Management**: Tracks instrument and analysis states
+1. **Python Command**: A command is sent from Python through one of the API modules
+2. **Module Processing**: The specific module (CE, Methods, Sequence, etc.) formats the command for ChemStation
+3. **Low-Level API**: The command is passed to the file-based communication protocol
+4. **File Writing**: The command is written to a communication file with a unique number
+5. **Macro Monitoring**: A ChemStation macro continuously monitors the communication file
+6. **Command Execution**: The macro sends the command to ChemStation's Command Processor
+7. **Response Generation**: ChemStation executes the command and generates a response
+8. **Response Writing**: The response is written back to a response file
+9. **Response Reading**: The low-level API reads the response from the file
+10. **Return to Python**: The response is passed back through the modules to the Python application
+
+This bidirectional communication enables full control of ChemStation from Python while maintaining reliability and error handling.
 
 ## Core Components
 
@@ -145,7 +169,7 @@ while api.system.method_on():
 - Traceable operations
 
 ### Integration
-- Connect other systems (pumps, SIA, ...)
+- Connect with other systems (pumps, SIA, etc.)
 - Implement custom workflows
 - Create adaptive methods
 

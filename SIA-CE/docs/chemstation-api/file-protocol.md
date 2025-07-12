@@ -1,182 +1,216 @@
-# ChemStation API Introduction
+# File-Based Communication Protocol
 
-## What is the ChemStation API?
-
-The ChemStation API provides a Python interface for controlling Agilent ChemStation software and CE instruments. It enables automated control of capillary electrophoresis systems without manual intervention.
-
-The API works by sending commands directly to ChemStation's Command Processor (CP) through a specialized communication protocol. Commands are sent from Python to ChemStation's command line interface, enabling direct control of all ChemStation functionality. This is achieved through a special macro system that monitors for Python commands and executes them within ChemStation - more details about this communication protocol can be found on the [File-Based Protocol](file-protocol.md) page.
-
-The API provides pre-built commands and methods for common operations, making it easy to automate complex analytical workflows. While these commands work with current ChemStation versions, please note that compatibility with newer OpenLAB CDS 2.x versions may be limited.
-
-The system is specifically optimized for capillary electrophoresis applications, but can be easily adapted for any instrument controlled by ChemStation software.
-
-## Key Capabilities
-
-### Instrument Control (CE)
-- Load and unload vials from carousel to analysis positions
-- Monitor vial positions and system states
-- Apply pressure to capillary (pressure application and flushing)
-- Real-time system monitoring
-
-### Method Management
-- Load existing methods
-- Save methods with modifications
-- Run methods with sample-specific information
-- Progress monitoring and control
-
-### Sequence Operations
-- Load and save sequences
-- Modify sequence tables
-- Import sequence tables from Excel
-- Control sequence execution (start/pause/resume)
-
-### System Monitoring
-- Real-time status monitoring
-- Analysis progress tracking
-- Error detection and handling
-- System readiness validation
-
-### Validation
-- Validate method and sequence file existence
-- Check carousel occupancy and vial presence
-- Verify system readiness for operations
-- Pre-flight checks for automated workflows
-
-## Architecture Overview
-
-```mermaid
-graph TD
-    A[Python Application] --> B[ChemStation API]
-    B --> C[Functional Modules]
-    C --> D[Low-Level File Protocol]
-    D --> E[Communication Files]
-    E --> F[ChemStation Macro]
-    F --> G[Command Processor]
-    G --> H[ChemStation Software]
-    H --> I[CE Instrument]
-    
-    I --> H
-    H --> G
-    G --> F
-    F --> E
-    E --> D
-    D --> C
-    C --> B
-    B --> A
-    
-    C --> J[CE Module]
-    C --> K[Methods Module]
-    C --> L[Sequence Module]
-    C --> M[System Module]
-    C --> N[Validation Module]
-```
+Understanding how Python communicates with ChemStation is crucial for troubleshooting and advanced usage. This page explains the file-based protocol that enables reliable command execution.
 
 ## How It Works
 
-The communication flow works as follows:
+The file-based communication protocol is adapted and enhanced from the original concept developed by Alexander Hammer and Hessam Mehr from the Cronin Group. The original implementation can be found at https://github.com/croningp/analyticallabware/tree/master/AnalyticalLabware/devices/Agilent. Our implementation builds upon their foundational work with improvements for CE-specific operations and enhanced reliability.
 
-1. **Python Command**: A command is sent from Python through one of the API modules
-2. **Module Processing**: The specific module (CE, Methods, Sequence, etc.) formats the command for ChemStation
-3. **Low-Level API**: The command is passed to the file-based communication protocol
-4. **File Writing**: The command is written to a communication file with a unique number
-5. **Macro Monitoring**: A ChemStation macro continuously monitors the communication file
-6. **Command Execution**: The macro sends the command to ChemStation's Command Processor
-7. **Response Generation**: ChemStation executes the command and generates a response
-8. **Response Writing**: The response is written back to a response file
-9. **Response Reading**: The low-level API reads the response from the file
-10. **Return to Python**: The response is passed back through the modules to the Python application
+The protocol creates a reliable bidirectional communication channel between Python and ChemStation by using monitored files as the communication medium. This approach ensures that commands are not lost and responses are properly matched to their originating requests.
 
-This bidirectional communication enables full control of ChemStation from Python while maintaining reliability and error handling.
+### Communication Flow
 
-## Core Components
-
-### ChemstationAPI Class
-The main entry point providing access to all modules:
-
-```python
-from ChemstationAPI import ChemstationAPI
-
-api = ChemstationAPI()
+```mermaid
+sequenceDiagram
+    participant Python
+    participant CommandFile
+    participant ResponseFile
+    participant Macro
+    participant ChemStation
+    
+    Python->>CommandFile: Write "1 LoadMethod MyMethod.M"
+    Macro->>CommandFile: Read command
+    Macro->>ChemStation: Execute LoadMethod
+    ChemStation-->>Macro: Return result
+    Macro->>ResponseFile: Write "1 None"
+    Python->>ResponseFile: Read response
 ```
 
-### Modules
+The macro runs continuously within ChemStation, monitoring the command file every 200ms for new commands. When a new command is detected (identified by a higher command number than previously processed), the macro executes it through ChemStation's Command Processor and writes the response to the response file.
 
-**CE Module** (`api.ce`)
-- Vial handling operations
-- Capillary conditioning
-- Pressure control
+## Command Format
 
-**Methods Module** (`api.method`)
-- Method loading and saving
-- Method execution
-- Parameter modification
+### Basic Commands
 
-**Sequence Module** (`api.sequence`)
-- Sequence table management
-- Excel integration
-- Batch execution control
-
-**System Module** (`api.system`)
-- Status monitoring
-- Progress tracking
-- System control
-
-**Validation Module** (`api.validation`)
-- Pre-operation checks
-- File existence validation
-- System state verification
-
-## Typical Workflow
+Commands without return values:
 
 ```python
-# 1. Initialize connection
-api = ChemstationAPI()
+# Python code
+api.send("LoadMethod _METHPATH$, MyMethod.M")
 
-# 2. Validate prerequisites
-api.validation.validate_vial_in_system(15)
-api.validation.validate_method_name("CE_Analysis")
+# Command file content
+123 LoadMethod _METHPATH$, MyMethod.M
 
-# 3. Prepare instrument
-api.ce.load_vial_to_position(15, "inlet")
-api.ce.load_vial_to_position(48, "outlet")
+# Response file content
+123 None
+```
 
-# 4. Condition capillary
-api.ce.flush_capillary(60.0)
+### Commands with Return Values
 
-# 5. Run analysis
-api.method.execution_method_with_parameters(
-    vial=15,
-    method_name="CE_Analysis",
-    sample_name="Sample_001"
+To capture a return value, prefix with `response$ = `:
+
+```python
+# Python code
+path = api.send("response$ = _METHPATH$")
+
+# Command file content
+124 response$ = _METHPATH$
+
+# Response file content
+124 C:\Chem32\1\Methods\CE\
+```
+
+## Command Numbering
+
+The protocol uses sequential command numbers to match responses with requests:
+
+- Numbers increment from 1 to 256 (configurable)
+- Automatically wraps around at maximum
+- Ensures each command gets its correct response
+- Prevents mixing responses from multiple commands
+
+```python
+# Example of command numbering in action
+1 response$ = _METHPATH$
+2 LoadMethod _METHPATH$, Test.M
+3 response$ = VAL$(_MethodOn)
+...
+256 response$ = ACQSTATUS$
+1 response$ = _DATAPATH$  # Wraps around
+```
+
+## File Locations
+
+Default file locations:
+
+```
+SIA-CE/
+└── ChemstationAPI/
+    └── core/
+        ├── ChemPyConnect.mac          # Macro file
+        └── communication_files/       # Communication directory
+            ├── command               # Command file
+            └── response              # Response file
+```
+
+## Monitoring Communication
+
+### Enable Verbose Mode
+
+```python
+from ChemstationAPI.core.communication_config import CommunicationConfig
+
+config = CommunicationConfig(verbose=True)
+api = ChemstationAPI(config)
+
+# Now all commands and responses are printed
+api.send("response$ = _METHPATH$")
+# Output:
+# Sending command 1: response$ = _METHPATH$
+# Received response 1: C:\Chem32\1\Methods\CE\
+```
+
+## Error Handling
+
+### Timeout Handling
+
+```python
+# Increase timeout for long operations
+api.send("RunMethod _DATAPATH$,, Sample001", timeout=30.0)
+```
+
+### Error Responses
+
+ChemStation errors are detected and raised as exceptions. Here's an example of what happens when you send an invalid command:
+
+```python
+try:
+    api.send("InvalidCommand parameter")
+except ChemstationError as e:
+    print(f"Error: {e}")
+    # Output: Error: ChemStation command failed: ERROR: The command InvalidCommand failed to execute. Error message: Invalid command syntax
+```
+
+When ChemStation cannot execute a command due to syntax errors, wrong parameters, or system state conflicts, it returns an error message that starts with "ERROR:". The API automatically detects these error responses and raises a `ChemstationError` exception with the detailed error message from ChemStation.
+
+Common error scenarios:
+- Invalid command syntax
+- Wrong parameter types or values
+- Commands not available in current mode
+- Instrument state conflicts
+
+## Macro Initialization
+
+The ChemStation macro must be running for communication to work:
+
+ChemStation command processor:
+```vb
+macro "C:\path\to\ChemPyConnect.mac"; Python_Run
+```
+
+The macro runs in a continuous loop:
+1. Reads command file every 200ms
+2. Executes new commands (higher number than last)
+3. Writes responses
+4. Continues until "Exit" command
+
+## Advanced Configuration
+
+### Custom Configuration
+
+```python
+from ChemstationAPI.core.communication_config import CommunicationConfig
+
+config = CommunicationConfig(
+    comm_dir="custom/path",
+    max_command_number=1000,
+    retry_delay=0.2,
+    max_retries=5,
+    default_timeout=10.0
 )
 
-# 6. Monitor progress
-while api.system.method_on():
-    remaining = api.system.get_remaining_analysis_time()
-    print(f"Time remaining: {remaining:.1f} minutes")
+api = ChemstationAPI(config)
 ```
 
-## Benefits
+### Configuration Options
 
-### Automation
-- Eliminate manual operations
-- Process large sample batches
-- Reduce human error
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `comm_dir` | `"core/communication_files"` | Communication directory |
+| `max_command_number` | `256` | Maximum before wraparound |
+| `retry_delay` | `0.1` | Seconds between retries |
+| `max_retries` | `10` | Maximum retry attempts |
+| `default_timeout` | `5.0` | Default command timeout |
+| `verbose` | `False` | Enable debug output |
 
-### Reproducibility
-- Consistent method execution
-- Standardized workflows
-- Traceable operations
+## Troubleshooting Protocol Issues
 
-### Integration
-- Connect with other systems (pumps, SIA, etc.)
-- Implement custom workflows
-- Create adaptive methods
+### No Response Received
 
-### Efficiency
-- Parallel sample preparation
-- Reduced analysis time
-- Increased throughput
+**Symptoms**: TimeoutError after sending command
 
-!!! tip "Next Steps"
-    Learn about the [File-Based Protocol](file-protocol.md) that enables communication with ChemStation.
+**Check**:
+1. Is ChemStation macro running?
+2. Are file paths correct?
+3. Can Python write to communication directory?
+
+### Wrong Response Received
+
+**Symptoms**: Response doesn't match command
+
+**Check**:
+1. Command numbering synchronization
+2. Multiple Python instances running?
+3. Old responses in response file?
+
+### Slow Communication
+
+**Symptoms**: Commands take long to execute
+
+**Solutions**:
+1. Reduce retry_delay in configuration
+2. Check disk performance
+3. Ensure antivirus isn't scanning communication files
+
+!!! tip "Understanding the Protocol"
+    The file-based protocol might seem complex, but it's very reliable once properly configured. Most issues come from macro not running or incorrect file paths.
