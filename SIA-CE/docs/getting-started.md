@@ -1,131 +1,152 @@
 # Getting Started
 
-This guide will help you install the SIA-CE package
+This guide will help you install the SIA-CE package and configure your system for automated CE analysis.
+
 ## Installation
 
 ### Prerequisites
 
-Before installing SIA-CE, ensure you have:
+- **Python 3.7 or higher** with pip package manager
+- **Visual Studio Code** (recommended for Jupyter notebook support)
+- **Agilent ChemStation** software running
 
-- **Python 3.7 or higher** installed with packages
-- **VSCode** pro lepší úpravu k´du s jupyter notebookem
-- **Agilent ChemStation** software properly configured
+### Package Installation
 
-### Instalace balíčků
-
-```bash
-# Clone the repository
-python -m pip install 
-```
-
-### Jupyter notebooku
-
-Pro lepší obsluhu skriptů doporučuji využívat jupyternotebook
-
-### Installation
-
-Pro instalaci bude zvoleno klonování balíčků z githubu do zvolené složky. Poté je nutné spuštění skriptu macro_updater pro nastavení cest.
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/SIA-CE.git
+cd SIA-CE
 
-python spuštění macro_updater pro úpravu cest v ovládacím makru
+# Install dependencies
+pip install pyserial pandas pywin32 tqdm openpyxl
+
+# Configure ChemStation communication paths
+python SIA-CE/ChemstationAPI/utils/macro_updater.py
 ```
 
-## Initial Setup
+The `macro_updater.py` script configures the correct file paths for ChemStation communication.
 
-### 1. ChemStation Configuration
+## System Configuration
 
-Before using the ChemStation API, you need to start the communication macro:
+### 1. ChemStation Setup
 
-1. Open ChemStation
-2. Navigate to the command line který je ve spodní části
-tip, pokud zde není musí se zapnout v nabídce
-3. Execute the following command:
+1. **Open ChemStation** and ensure it's fully loaded
 
-```
-macro "C:\path\to\SIA-CE\ChemstationAPI\core\ChemPyConnect.mac"; Python_Run
-```
+2. **Find the command line** at the bottom of the interface
+   
+   !!! tip "Command line missing?"
+       Enable it from: `View → Command Line`
 
-!!! warning "Important"
-    Replace `C:\path\to\` with your actual installation path!
+3. **Start the communication macro**:
+   ```
+   macro "C:\path\to\SIA-CE\ChemstationAPI\core\ChemPyConnect.mac"; Python_Run
+   ```
+   
+   !!! warning "Update the path"
+       Replace with your actual installation path (shown by macro_updater)
 
-tip: příkaz pro chemstation se zobrazí při chbě při iniciaci ChemstationAPI
+4. **Verify success** - look for "Start Python communication" message
 
-4. V pythonu naimportujte Chemstation třídu a iniciujte, pokud vše proběhne v pořádku, máte hotovo
-```
-from ChemstationAPI import ChemstationAPI
+### 2. Hardware Setup
 
-chemstation = ChemstationAPI()
-```
-
-Zde udělej
-
-### 2. Hardware Configuration
-
-#### Find COM Ports
-
-To identify your device COM ports:
+**Find COM ports** in Device Manager (`devmgmt.msc`) under "Ports (COM & LPT)" or:
 
 ```python
 import serial.tools.list_ports
-
-# List all available COM ports
-ports = serial.tools.list_ports.comports()
-for port in ports:
+for port in serial.tools.list_ports.comports():
     print(f"{port.device}: {port.description}")
 ```
 
-nebo ve správci zařízení
+## System Test
 
-#### Test Connections
-
-Test syringe pump connection:
+Run this complete test to verify everything works:
 
 ```python
-from SIA_API.devices import SyringeController
+from ChemstationAPI import ChemstationAPI
+from SIA_API.devices import SyringeController, ValveSelector
+from SIA_API.methods import PreparedSIAMethods
 
-syringe = SyringeController(port="COM3", syringe_size=1000)
-syringe.iniciation()  # iniciace stříkačky
+def system_test():
+    """Test all components."""
+    print("=== SIA-CE System Test ===")
+    
+    # ChemStation
+    try:
+        ce_api = ChemstationAPI()
+        status = ce_api.system.status()
+        print(f"✓ ChemStation connected (Status: {status})")
+    except Exception as e:
+        print(f"✗ ChemStation failed: {e}")
+        return False
+    
+    # SIA devices
+    try:
+        syringe = SyringeController(port="COM3", syringe_size=1000)
+        valve = ValveSelector(port="COM4", num_positions=8)
+        
+        syringe.initialize()
+        valve.position(1)
+        print("✓ SIA devices connected")
+    except Exception as e:
+        print(f"✗ SIA devices failed: {e}")
+        return False
+
+# Run the test
+system_test()
 ```
 
-Test valve selector connection:
+## Troubleshooting
 
+**ChemStation Connection Failed**
+- Ensure ChemStation is running
+- Execute the macro command (exact command shown in error message)
+- Check communication file paths
+
+**COM Port Access Denied**
+- Verify correct COM port numbers in Device Manager
+- Close other programs using the ports
+- Run Python as Administrator
+- Check device power and cables
+
+**Device Not Responding**
+- Check power connections
+- Verify cable connections (USB/RS232)
+- Try different COM ports
+
+**Missing Dependencies**
+```bash
+pip install pyserial pandas pywin32 tqdm openpyxl
+```
+
+## Development Tips
+
+**Use Jupyter Notebooks** for interactive development:
+- Step-by-step execution
+- Real-time variable inspection  
+- Easy debugging
+- Available in VS Code or Jupyter Lab
+
+**Basic workflow template**:
 ```python
-from SIA_API.devices import ValveSelector
+from ChemstationAPI import ChemstationAPI
+from SIA_API.devices import SyringeController, ValveSelector
+from SIA_API.methods import PreparedSIAMethods
 
+# Initialize
+ce_api = ChemstationAPI()
+syringe = SyringeController(port="COM3", syringe_size=1000)  
 valve = ValveSelector(port="COM4", num_positions=8)
-valve.position(1)  # Should move to position 1
+workflow = PreparedSIAMethods(ce_api, syringe, valve)
+
+# Your code here
 ```
-
-## Common Installation Issues
-
-### ChemStation Connection Failed
-
-**Error**: `ConnectionError: Failed to establish communication with ChemStation`
-
-**Solution**:
-
-1. Ensure ChemStation is running
-2. Execute the macro command in ChemStation
-tip: v chybě se nachází příkaz přímo pro chemstation s cestou
-3. Check communication file paths in configuration
-
-### COM Port Access Denied
-
-**Error**: `PermissionError: Access is denied`
-
-**Solution**:
-1. Ujistětese, že jste nastavili správné COM porty
-2. Close any other programs using the COM port
-3. Check Windows Device Manager for port conflicts
-
 
 ## Next Steps
 
-Now that you have the system running:
+1. **[ChemStation File Protocol](chemstation-api/file-protocol.md)** - Understand the communication
+2. **[Basic CE Operations](chemstation-api/basic-operations.md)** - Learn core functions
+3. **[First Analysis Tutorial](tutorials/first-analysis.md)** - Complete walkthrough
+4. **[SIA Workflows](sia-api/workflows.md)** - Advanced automation
 
-1. Learn about the [ChemStation File Protocol](chemstation-api/file-protocol.md)
-2. Explore [Basic CE Operations](chemstation-api/basic-operations.md)
-3. Try the [First Analysis Tutorial](tutorials/first-analysis.md)
-4. Read about [SIA Workflows](sia-api/workflows.md)
+!!! success "Ready to go!"
+    Your SIA-CE system is configured. Start with the [First Analysis Tutorial](tutorials/first-analysis.md) for hands-on learning.

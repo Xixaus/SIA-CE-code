@@ -24,17 +24,22 @@ Together, they enable:
 ## Key Features
 
 ### ChemStation API
-- Direct control of OpenLab CDS ChemStation by macros
-- Jednoduchý a robustní komunikační protokol
-- Comprehensive method and sequence management
-- Real-time instrument status monitoring
-- Snadné doplnění či úprava pro specifické aplikace
-- Předpřipravené ovládací funkce
+- **Universal ChemStation Control**: Compatible with any instrument controlled by ChemStation software
+- **CE-Optimized Functions**: While universally applicable, functions are specifically designed and optimized for capillary electrophoresis operations
+- **Direct Command Processor Access**: Commands sent directly to ChemStation command line for maximum flexibility
+- **Robust Communication Protocol**: Simple and reliable file-based communication system
+- **Comprehensive Method Management**: Complete CE method and sequence handling with advanced parameter control
+- **Real-time Instrument Monitoring**: Live status and progress tracking with detailed analytics
+- **Easy Customization**: Simple to extend or modify for specific applications and instrument configurations
+- **Ready-to-Use Control Functions**: Pre-programmed operations for common CE tasks and workflows
 
 ### SIA API
-- Precise syringe pump control (Cavro XP)
-- Multi-position valve automation (VICI compatible)
-- Pre-built workflows for common operations
+- **Precise Syringe Pump Control**: Full automation of Cavro XP and Hamilton MVP series pumps with microliter precision
+- **Multi-Position Valve Automation**: Complete control of VICI and compatible valve selectors for fluid routing
+- **Advanced Liquid Handling**: Sophisticated aspiration, dispensing, and mixing operations with customizable parameters
+- **Pre-Built Analytical Workflows**: Ready-to-use methods for sample preparation, dilution, and homogenization
+- **Volume Tracking & Safety**: Automatic volume monitoring with overflow protection and error recovery
+- **Flexible Configuration**: Customizable port assignments and operational parameters for different laboratory setups
 
 ### Integration Benefits
 - Seamless coordination between sample preparation and analysis
@@ -47,15 +52,14 @@ Together, they enable:
 ```python
 from ChemstationAPI import ChemstationAPI
 from SIA_API.methods import PreparedSIAMethods
-
-from SIA_API.devices import syringe_controller valve_selector
+from SIA_API.devices import SyringeController, ValveSelector
 
 # Initialize systems
 chemstation = ChemstationAPI()
-syringe = SyringeController(port="COM5", syringe_size=1000)
-valve = ValveSelector(port="COM5", num_position=8)
+syringe = SyringeController(port="COM3", syringe_size=1000)  # Cavro XP or Hamilton MVP
+valve = ValveSelector(port="COM4", num_positions=8)
 
-sia = PreparedSIAMethods(ce, syringe, valve)
+sia = PreparedSIAMethods(chemstation, syringe, valve)
 
 # Automated workflow
 sia.system_initialization_and_cleaning()
@@ -84,14 +88,14 @@ This documentation is organized to help you quickly find what you need:
 ## System Requirements
 
 ### Hardware
-- Agilent 7100 Capillary Electrophoresis System
-- Cavro XP or compatible syringe pump
+- Agilent 7100 Capillary Electrophoresis System (or other ChemStation-compatible instruments)
+- Cavro XP or Hamilton MVP series syringe pump
 - VICI or compatible valve selector
-- Windows PC with available COM ports nebo usb redukce na rs232
+- Windows PC with available COM ports or USB-to-RS232 adapters
 
 ### Software
 - Windows 7 or higher
-- OpenLab CDS ChemStation Edition
+- Agilent OpenLab CDS ChemStation Edition
 - Python 3.7+
 - Required Python packages (see [Getting Started](getting-started.md))
 
