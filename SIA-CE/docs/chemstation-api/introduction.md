@@ -4,20 +4,21 @@
 
 The ChemStation API provides a Python interface for controlling Agilent ChemStation software and CE instruments. It enables automated control of capillary electrophoresis systems without manual intervention.
 
-Nějak tady popiš že to fungujhe tak, že se odesílají příkazy do chmstation comanline (command processor). Por snadnější používání, jsou již předněpřivané příkazy. Není to jen čistě por CE ale je to vyvýjeno na CE a mnho příkazů je tomu uspůsobeno. Por fungování je potřeba mít zaplý chemstation se spesiálním makrem (viz další kapitola)
+Tady napiš, že to funguje na to, že se posílají příkazy do comandlinu. (command processor). Poté tam nějak zniň že to funguje na principu speciálního makra a pak se odkaž na další stránku, kde je to více popsáno. Něco tu napiš, že již jsou predpřipravené příkazy pro použití a že to příkazy mohou být využívány pro chemstation ale již to nefunguje na novějších OpenLAB CDS 2.x. Poté tam něco papiš, že je to přispůsoberno konkrétně pro použití na kapilární elktroforézy ale není problém si t upravit pro jakékolikv zařízení
 
 ## Key Capabilities
 
 ### Instrument Control (CE)
-- Load and unload vials from carousel to analysis positions
-- Control capillary conditioning and flushing
-- Apply pressure for sample injection
+- Load and unload vials from carousel to analysis positions a zjištováná stavu pozic
+- aplikace tlaku na kapiláru (apply pressure a flush)
 - Monitor vial positions and system state
+-
 
 ### Method Management
-- Load existin methods
+- Load existing methods
+- ukládání method
 - Run methods with sample-specific information
-- ještě něco
+- monitoring
 
 ### Sequence Operations
 - Load and save sequence
@@ -30,6 +31,9 @@ Nějak tady popiš že to fungujhe tak, že se odesílají příkazy do chmstati
 - Analysis progress tracking
 - Error detection and handling
 - System readiness validation
+
+### Validation
+- validace různých věcí, jako exitence metod sequencí, obsazenost caouselu ,zda lze využít carousel,...
 
 ## Architecture Overview
 
