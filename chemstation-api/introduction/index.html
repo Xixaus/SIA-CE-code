@@ -607,6 +607,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1396,6 +1405,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1534,24 +1552,27 @@
 <h1 id="chemstation-api-introduction">ChemStation API Introduction</h1>
 <h2 id="what-is-the-chemstation-api">What is the ChemStation API?</h2>
 <p>The ChemStation API provides a Python interface for controlling Agilent ChemStation software and CE instruments. It enables automated control of capillary electrophoresis systems without manual intervention.</p>
-<p>Nějak tady popiš že to fungujhe tak, že se odesílají příkazy do chmstation comanline (command processor). Por snadnější používání, jsou již předněpřivané příkazy. Není to jen čistě por CE ale je to vyvýjeno na CE a mnho příkazů je tomu uspůsobeno. Por fungování je potřeba mít zaplý chemstation se spesiálním makrem (viz další kapitola)</p>
+<p>The API works by sending commands directly to ChemStation's Command Processor (CP) through a specialized communication protocol. Commands are sent from Python to ChemStation's command line interface, enabling direct control of all ChemStation functionality. This is achieved through a special macro system that monitors for Python commands and executes them within ChemStation - more details about this communication protocol can be found on the <a href="../file-protocol/">File-Based Protocol</a> page.</p>
+<p>The API provides pre-built commands and methods for common operations, making it easy to automate complex analytical workflows. While these commands work with current ChemStation versions, please note that compatibility with newer OpenLAB CDS 2.x versions may be limited.</p>
+<p>The system is specifically optimized for capillary electrophoresis applications, but can be easily adapted for any instrument controlled by ChemStation software.</p>
 <h2 id="key-capabilities">Key Capabilities</h2>
 <h3 id="instrument-control-ce">Instrument Control (CE)</h3>
 <ul>
 <li>Load and unload vials from carousel to analysis positions</li>
-<li>Control capillary conditioning and flushing</li>
-<li>Apply pressure for sample injection</li>
-<li>Monitor vial positions and system state</li>
+<li>Monitor vial positions and system states</li>
+<li>Apply pressure to capillary (pressure application and flushing)</li>
+<li>Real-time system monitoring</li>
 </ul>
 <h3 id="method-management">Method Management</h3>
 <ul>
-<li>Load existin methods</li>
+<li>Load existing methods</li>
+<li>Save methods with modifications</li>
 <li>Run methods with sample-specific information</li>
-<li>ještě něco</li>
+<li>Progress monitoring and control</li>
 </ul>
 <h3 id="sequence-operations">Sequence Operations</h3>
 <ul>
-<li>Load and save sequence</li>
+<li>Load and save sequences</li>
 <li>Modify sequence tables</li>
 <li>Import sequence tables from Excel</li>
 <li>Control sequence execution (start/pause/resume)</li>
@@ -1563,29 +1584,53 @@
 <li>Error detection and handling</li>
 <li>System readiness validation</li>
 </ul>
+<h3 id="validation">Validation</h3>
+<ul>
+<li>Validate method and sequence file existence</li>
+<li>Check carousel occupancy and vial presence</li>
+<li>Verify system readiness for operations</li>
+<li>Pre-flight checks for automated workflows</li>
+</ul>
 <h2 id="architecture-overview">Architecture Overview</h2>
-<p>Tady to není úplně přesné, na začátkuje python, pak je api, potí jsou mody, které následně jsou do filebase protokolu (low lelw api), které zapisuje do souborů a pak to jde do makra ale jde to tam obou straně, pak se odpovědi vraz zpět</p>
 <pre class="mermaid"><code>graph TD
     A[Python Application] --&gt; B[ChemStation API]
-    B --&gt; C[File-Based Protocol]
-    C --&gt; D[ChemStation Macro]
-    D --&gt; E[ChemStation Software]
-    E --&gt; F[CE Instrument]
+    B --&gt; C[Functional Modules]
+    C --&gt; D[Low-Level File Protocol]
+    D --&gt; E[Communication Files]
+    E --&gt; F[ChemStation Macro]
+    F --&gt; G[Command Processor]
+    G --&gt; H[ChemStation Software]
+    H --&gt; I[CE Instrument]
 
-    B --&gt; G[CE Module]
-    B --&gt; H[Methods Module]
-    B --&gt; I[Sequence Module]
-    B --&gt; J[System Module]
-    B --&gt; K[Validation Module]</code></pre>
+    I --&gt; H
+    H --&gt; G
+    G --&gt; F
+    F --&gt; E
+    E --&gt; D
+    D --&gt; C
+    C --&gt; B
+    B --&gt; A
+
+    C --&gt; J[CE Module]
+    C --&gt; K[Methods Module]
+    C --&gt; L[Sequence Module]
+    C --&gt; M[System Module]
+    C --&gt; N[Validation Module]</code></pre>
 <h2 id="how-it-works">How It Works</h2>
-<p>Funguje to tak, že se zadá pošle příkaz z pythonu, v daném modulu je přímo příkaz pro chemstation, tkerý se odešle přes lowlevel api do souboru a přes makro v chemstationu do command processoru, pošle se odpoved do soubru, který low level api přetě a odešle zpět do pythonu. Nějak tak</p>
+<p>The communication flow works as follows:</p>
 <ol>
-<li><strong>Communication Layer</strong>: Uses file-based protocol for reliable command exchange</li>
-<li><strong>Module Organization</strong>: Functionality divided into logical modules</li>
-<li><strong>Command Processing</strong>: Commands sent to ChemStation's Command Processor</li>
-<li><strong>Response Handling</strong>: Automatic response parsing and error detection</li>
-<li><strong>State Management</strong>: Tracks instrument and analysis states</li>
+<li><strong>Python Command</strong>: A command is sent from Python through one of the API modules</li>
+<li><strong>Module Processing</strong>: The specific module (CE, Methods, Sequence, etc.) formats the command for ChemStation</li>
+<li><strong>Low-Level API</strong>: The command is passed to the file-based communication protocol</li>
+<li><strong>File Writing</strong>: The command is written to a communication file with a unique number</li>
+<li><strong>Macro Monitoring</strong>: A ChemStation macro continuously monitors the communication file</li>
+<li><strong>Command Execution</strong>: The macro sends the command to ChemStation's Command Processor</li>
+<li><strong>Response Generation</strong>: ChemStation executes the command and generates a response</li>
+<li><strong>Response Writing</strong>: The response is written back to a response file</li>
+<li><strong>Response Reading</strong>: The low-level API reads the response from the file</li>
+<li><strong>Return to Python</strong>: The response is passed back through the modules to the Python application</li>
 </ol>
+<p>This bidirectional communication enables full control of ChemStation from Python while maintaining reliability and error handling.</p>
 <h2 id="core-components">Core Components</h2>
 <h3 id="chemstationapi-class">ChemstationAPI Class</h3>
 <p>The main entry point providing access to all modules:</p>
@@ -1656,7 +1701,7 @@
 </ul>
 <h3 id="integration">Integration</h3>
 <ul>
-<li>Connect other systems (pumps, SIA, ...)</li>
+<li>Connect with other systems (pumps, SIA, etc.)</li>
 <li>Implement custom workflows</li>
 <li>Create adaptive methods</li>
 </ul>
