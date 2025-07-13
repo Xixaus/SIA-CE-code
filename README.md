@@ -9,6 +9,8 @@ Python package for automated capillary electrophoresis (CE) analysis programming
 
 This package provides a Python interface for programming and controlling capillary electrophoresis instruments through Agilent Chemstation. It enables scientists and researchers to create automated analytical workflows without extensive programming knowledge.
 
+DOCUMENTATION: https://xixaus.github.io/SIA-CE-code/ 
+
 ### Key Features
 
 - **Chemstation Integration**: Direct communication with Agilent Chemstation software
