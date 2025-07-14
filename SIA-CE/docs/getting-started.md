@@ -34,10 +34,10 @@ The `macro_updater.py` script configures the correct file paths for ChemStation 
 
 2. **Find the command line** at the bottom of the interface
    
-   !!! tip "Command line missing?"
+   !!! info "Command line missing?"
        Enable it from: `View → Command Line`
 
-3. **Start the communication macro**:
+4. **Start the communication macro**:
    ```
    macro "C:\path\to\SIA-CE\ChemstationAPI\core\ChemPyConnect.mac"; Python_Run
    ```
@@ -45,7 +45,7 @@ The `macro_updater.py` script configures the correct file paths for ChemStation 
    !!! warning "Update the path"
        Replace with your actual installation path (shown by macro_updater)
 
-4. **Verify success** - look for "Start Python communication" message
+5. **Verify success** - look for "Start Python communication" message
 
 ### 2. Hardware Setup
 
