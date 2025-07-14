@@ -42,7 +42,7 @@ The `macro_updater.py` script configures the correct file paths for ChemStation 
    macro "C:\path\to\SIA-CE\ChemstationAPI\core\ChemPyConnect.mac"; Python_Run
    ```
    
-   !!! warning "Update the path"
+   !!! info "Update the path"
        Replace with your actual installation path (shown by macro_updater)
 
 5. **Verify success** - look for "Start Python communication" message
