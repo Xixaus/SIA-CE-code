@@ -525,6 +525,126 @@ class PreparedSIAMethods:
         if unload:
             self.unload_from_replenishment()
 
+    def batch_fill_multiple_solvents(self, vial: int, solvent_ports: List[int], 
+                                    volumes: List[int], 
+                                    air_push_volume: int = DEFAULT_BUBBLE_VOLUME,
+                                    transfer_line_volume: int = DEFAULT_TRANSFER_LINE_VOLUME,
+                                    speed: int = DEFAULT_SPEED_NORMAL,
+                                    air_speed: int = DEFAULT_SPEED_AIR,
+                                    flush_needle: Optional[int] = None,
+                                    wash_vial: int = DEFAULT_WASH_VIAL,
+                                    unload: bool = True,
+                                    wait: Optional[int] = None,
+                                    **port_overrides):
+        """
+        Execute batch filling with multiple solvents from different ports.
+        
+        Fills a single vial with multiple solvents in sequence using air-driven
+        batch mode. Each solvent is processed individually (aspirate → transfer)
+        to avoid exceeding syringe capacity. Air bubbles separate each solvent,
+        then the entire mixture is pushed to the vial with final air pressure.
+        
+        Process:
+        1. For each solvent: aspirate air bubble → aspirate solvent → transfer to line
+        2. Final air push at high speed to deliver mixture to vial
+        3. Optional needle cleaning
+        
+        Args:
+            vial: Target vial number (1-50)
+            solvent_ports: List of port numbers for different solvents
+            volumes: List of volumes (µL) corresponding to each solvent port
+            air_push_volume: Air bubble volume between solvents in µL (default: 15)
+            transfer_line_volume: Volume for final air push in µL (default: 300)
+            speed: Flow rate for liquid handling in µL/min (default: 2000)
+            air_speed: Flow rate for air aspiration in µL/min (default: 5000)
+            flush_needle: Optional needle flush volume in µL
+            wash_vial: Vial for needle washing (default: 48)
+            unload: Whether to unload vial after filling (default: True)
+            wait: Optional wait time in seconds after dispensing
+            **port_overrides: Optional port overrides (air_port, transfer_port)
+            
+        Raises:
+            ValueError: If solvent_ports and volumes lists have different lengths
+            ValueError: If any single volume + air bubble exceeds syringe capacity
+            
+        Note:
+            Each solvent is processed individually to prevent capacity overflow.
+            Largest single volume (including air bubble) must fit in syringe.
+            
+        Example:
+            >>> # Create 50% methanol, 50% water mixture (200 µL total)
+            >>> workflow.batch_fill_multiple_solvents(
+            ...     vial=15,
+            ...     solvent_ports=[5, 3],  # [methanol_port, water_port]
+            ...     volumes=[100, 100],    # Equal volumes
+            ...     flush_needle=25
+            ... )
+            
+            >>> # Large volume sequential addition (prevents capacity issues)
+            >>> workflow.batch_fill_multiple_solvents(
+            ...     vial=22,
+            ...     solvent_ports=[7, 5, 3],  # [buffer, methanol, water]
+            ...     volumes=[400, 300, 200], # Large volumes processed individually
+            ...     air_push_volume=20
+            ... )
+        """
+        # Validate input parameters
+        if len(solvent_ports) != len(volumes):
+            raise ValueError("Number of solvent ports and volumes must match")
+        
+        if not solvent_ports or not volumes:
+            raise ValueError("At least one solvent port and volume must be specified")
+        
+        # Resolve port configurations
+        ports = self._resolve_ports(**port_overrides)
+        
+        # Validate individual volumes against syringe capacity
+        max_single_volume = max(volumes) + air_push_volume
+        if max_single_volume > self.syringe_size:
+            raise ValueError(f"Largest single volume ({max_single_volume} µL) exceeds syringe capacity ({self.syringe_size} µL)")
+        
+        # Load vial and initialize
+        self.load_to_replenishment(vial)
+        self.syringe.set_speed_uL_min(speed)
+        
+        # Sequential processing of solvents - each solvent individually to avoid capacity issues
+        for port, volume in zip(solvent_ports, volumes):
+            # Aspirate air bubble separator
+            self.valve.position(ports['air_port'])
+            self.syringe.aspirate(air_push_volume)
+            
+            # Aspirate solvent from specified port
+            self.valve.position(port)
+            self.syringe.aspirate(volume)
+            
+            # Transfer to transfer line immediately
+            self.valve.position(ports['transfer_port'])
+            self.syringe.dispense()
+        
+        # Final air push to vial
+        self.syringe.set_speed_uL_min(air_speed)
+        self.valve.position(ports['air_port'])
+        self.syringe.aspirate(transfer_line_volume)
+        
+        # Change speed back to normal for dispensing
+        self.syringe.set_speed_uL_min(speed)
+        self.valve.position(ports['transfer_port'])
+        
+        # Final dispensing with optional needle cleaning
+        if flush_needle is None:
+            self.syringe.dispense()
+            if wait:
+                time.sleep(wait)
+        else:
+            self.syringe.dispense(transfer_line_volume - flush_needle)
+            if wait:
+                time.sleep(wait)
+            self.clean_needle(flush_needle, wash_vial)
+        
+        # Unload vial if requested
+        if unload:
+            self.unload_from_replenishment()
+
     def homogenize_sample(self, vial: int, speed: int, homogenization_time: float, 
                          flush_needle: Optional[int] = None,
                          unload: bool = True, air_speed: int = 5000,
