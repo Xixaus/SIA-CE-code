@@ -1,0 +1,90 @@
+! Main macro for monitoring and processing communication between ChemStation and Python
+
+!Original concept by:
+!    Alexander Hammer, Hessam Mehr
+!    https://github.com/croningp/analyticallabware/blob/master/AnalyticalLabware/devices/Agilent/hplctalk.mac
+
+
+Name MonitorFile
+    Parameter files_dir$
+    Local in$, command_number, command$, response$, sep_position, command_len, last_command_number, errorflag, input_file$, output_file$
+    
+    Print "Start Python communication"
+
+    ! Definition of communication file paths
+    input_file$ = files_dir$ + "\command"        ! File for receiving commands
+    output_file$ = files_dir$ + "\response"     ! File for responses
+
+    ! Initialize command file with empty command
+    Open input_file$ for output as #3
+    Print #3, "0 Sleep 1"
+    Close #3
+
+    last_command_number = 0
+    ! Main loop for command processing
+    Repeat
+        errorflag = 0
+        Sleep 0.2
+        response$ = "None"
+        ! Reading command and its number from input file
+        ! Command format: <number> <command>
+        Open input_file$ for input as #3
+        Input #3, in$
+        Close #3
+        ! Parsing command number and the command itself
+        separator_position = InStr (in$, " ")
+        command_length = Len (in$)
+        command_number = Val (in$[1:separator_position])
+        command$ = in$[(separator_position+1):command_length]
+
+        ! Process command only if its number is greater than the last processed command
+        ! This ensures each command is processed only once
+        If command_number > last_command_number Then
+            last_command_number = command_number
+
+            Print "Executing: ", command$
+
+            If command$ = "Exit" Then
+                 
+            Else
+                ! Execute command with error handling
+                ! Evaluate sends the command to the ChemStation command processor
+                On Error errorflag = 1
+                Evaluate command$
+                sleep 0.1
+            EndIf
+            
+            ERROR$ = _ERRMSG$
+
+            ! Write response to reply file with command number
+            Open output_file$ for output as #5
+            If errorflag = 0 Then
+                Print #5, command_number, response$
+            Else
+                Print #5, command_number, " ERROR: The command ", command$, " failed to execute. Error message: ", ERROR$
+            EndIf
+            Close #5
+
+        EndIf
+    Until command$ = "Exit"
+    Print "End Python communication"
+EndMacro
+
+! Macro for starting monitoring in defined directory
+Name CP_Loop
+    MonitorFile "c:\Users\hpst\python\SIA-CE\ChemstationAPI\core\communication_files"
+EndMacro
+
+! Macro for starting Python communication
+Name Python_Run
+    ! Check for ChemStation process existence and start if needed
+    If CPExists(Python_CP) = 0 Then
+        CpStart Python_CP
+    EndIf
+    CpRequest Python_CP, CP_Loop
+EndMacro
+
+! Macro for terminating Python communication
+Name Python_Stop
+    CpTerminate Python_CP
+EndMacro
