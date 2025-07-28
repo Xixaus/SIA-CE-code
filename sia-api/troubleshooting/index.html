@@ -12,13 +12,13 @@
         <meta name="author" content="Richard Maršala">
       
       
-        <link rel="canonical" href="https://github.com/yourusername/SIA-CE/sia-api/port-configuration/">
+        <link rel="canonical" href="https://github.com/yourusername/SIA-CE/sia-api/troubleshooting/">
       
       
-        <link rel="prev" href="../workflows/">
+        <link rel="prev" href="../port-configuration/">
       
       
-        <link rel="next" href="../troubleshooting/">
+        <link rel="next" href="../../tutorials/first-analysis/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Workflows Configuration - SIA-CE Integration</title>
+        <title>Troubleshooting - SIA-CE Integration</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#system-configuration" class="md-skip">
+        <a href="#troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Workflows Configuration
+              Troubleshooting
             
           </span>
         </div>
@@ -736,6 +736,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../port-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflows Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -753,7 +776,7 @@
   
   
   <span class="md-ellipsis">
-    Workflows Configuration
+    Troubleshooting
     
   </span>
   
@@ -766,7 +789,7 @@
   
   
   <span class="md-ellipsis">
-    Workflows Configuration
+    Troubleshooting
     
   </span>
   
@@ -789,47 +812,194 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#communication-errors" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Communication Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Communication Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serialexception-could-not-open-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      SerialException: Could not open port
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#default-configuration" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#timeouterror-no-response-from-device" class="md-nav__link">
     <span class="md-ellipsis">
-      Default Configuration
+      TimeoutError: No response from device
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-configuration" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#communication-test" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Configuration
+      Communication Test
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Parameters
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-validation" class="md-nav__link">
+  <a href="#volume-tracking-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration Validation
+      Volume Tracking Issues
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Volume Tracking Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume-counter-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Counter Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-overflow-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Overflow Errors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-underflow-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Underflow Errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flow-rate-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow Rate Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flow Rate Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#speed-out-of-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      Speed Out of Range
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#valve-position-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valve Position Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Valve Position Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid Position
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valve-not-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valve Not Moving
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Performance Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Performance Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slow Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inaccurate-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inaccurate Volumes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-contamination" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Contamination
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -837,29 +1007,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Troubleshooting
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1262,47 +1409,194 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#communication-errors" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Communication Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Communication Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serialexception-could-not-open-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      SerialException: Could not open port
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#default-configuration" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#timeouterror-no-response-from-device" class="md-nav__link">
     <span class="md-ellipsis">
-      Default Configuration
+      TimeoutError: No response from device
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-configuration" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#communication-test" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Configuration
+      Communication Test
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Parameters
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-validation" class="md-nav__link">
+  <a href="#volume-tracking-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration Validation
+      Volume Tracking Issues
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Volume Tracking Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume-counter-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Counter Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-overflow-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Overflow Errors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-underflow-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Underflow Errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flow-rate-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow Rate Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flow Rate Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#speed-out-of-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      Speed Out of Range
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#valve-position-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valve Position Errors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Valve Position Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid Position
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valve-not-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valve Not Moving
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Performance Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Performance Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slow-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slow Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inaccurate-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inaccurate Volumes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-contamination" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Contamination
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1325,82 +1619,153 @@
   
 
 
-<h1 id="system-configuration">System Configuration</h1>
-<h2 id="overview">Overview</h2>
-<p>System configuration centralizes all operational parameters - port assignments, volumes, flow rates, and vial positions - in one place for consistent settings across all workflow methods.</p>
-<h2 id="default-configuration">Default Configuration</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@dataclass</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">SystemConfig</span><span class="p">:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="c1"># Port assignments</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">waste_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">air_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">di_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">transfer_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">meoh_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="c1"># System volumes (µL)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">holding_coil_volume</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">transfer_line_volume</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">550</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">bubble_volume</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="c1"># Flow rates (µL/min)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">speed_air</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">speed_fast</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3500</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">speed_normal</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">speed_slow</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="c1"># Standard vial positions</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">wash_vial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">48</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">dry_vial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">49</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">waste_vial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
+<h1 id="troubleshooting">Troubleshooting</h1>
+<h2 id="communication-errors">Communication Errors</h2>
+<h3 id="serialexception-could-not-open-port">SerialException: Could not open port</h3>
+<p><strong>Cause:</strong> COM port access issues
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Error message</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">SerialException</span><span class="p">:</span> <span class="n">could</span> <span class="ow">not</span> <span class="nb">open</span> <span class="n">port</span> <span class="s1">&#39;COM3&#39;</span><span class="p">:</span> <span class="n">Access</span> <span class="ow">is</span> <span class="n">denied</span>
+</code></pre></div></p>
+<p><strong>Solutions:</strong>
+    - Close other applications using the port (HyperTerminal, Arduino IDE)
+    - Run Python as Administrator
+    - Check Device Manager for port conflicts
+    - Verify correct COM port number
+    - Check cable connections and device power</p>
+<h3 id="timeouterror-no-response-from-device">TimeoutError: No response from device</h3>
+<p><strong>Cause:</strong> Device not responding within timeout period</p>
+<p><strong>Solutions:</strong>
+- Check device power and connections
+- Verify baud rate settings (9600 vs 19200)
+- Increase timeout in send_command()
+- Test with device manufacturer software
+- Check for loose serial connections</p>
+<h3 id="communication-test">Communication Test</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test syringe communication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">syringe</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">get_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Syringe OK: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Syringe error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Test valve communication  </span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">valve</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valve OK&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valve error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="custom-configuration">Custom Configuration</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">SIA_API.methods</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_custom_config</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Override specific parameters</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">custom_config</span> <span class="o">=</span> <span class="n">create_custom_config</span><span class="p">(</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">waste_port</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">transfer_port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">holding_coil_volume</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">speed_normal</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">wash_vial</span><span class="o">=</span><span class="mi">47</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Use in workflow</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">workflow</span> <span class="o">=</span> <span class="n">PreparedSIAMethods</span><span class="p">(</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">chemstation_controller</span><span class="o">=</span><span class="n">ce_api</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">syringe_device</span><span class="o">=</span><span class="n">syringe</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">valve_device</span><span class="o">=</span><span class="n">valve</span><span class="p">,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">ports_config</span><span class="o">=</span><span class="n">custom_config</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">)</span>
+<h2 id="volume-tracking-issues">Volume Tracking Issues</h2>
+<h3 id="volume-counter-mismatch">Volume Counter Mismatch</h3>
+<p><strong>Problem:</strong> Syringe contains liquid but volume counter shows 0 after initialization</p>
+<p><strong>Cause:</strong> Manual operations or interrupted sequences leave liquid in syringe, but initialization resets counter to 0</p>
+<p><strong>How initialization works:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">syringe</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>  <span class="c1"># Automatically sets valve to position 1 (waste)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                     <span class="c1"># Dispenses any existing content to waste</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                     <span class="c1"># Moves syringe to home position</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                     <span class="c1"># Resets volume counter to 0</span>
+</code></pre></div></p>
+<p><strong>Solutions:</strong></p>
+<p><strong>Option 1: Normal initialization (recommended)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">valve</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>     <span class="c1"># Ensure waste position (done automatically)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">syringe</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>  <span class="c1"># This handles everything automatically</span>
+</code></pre></div></p>
+<p><strong>Option 2: Manual pre-emptying if unsure</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">valve</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>     <span class="c1"># Waste port</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">syringe</span><span class="o">.</span><span class="n">dispense</span><span class="p">()</span>    <span class="c1"># Empty completely first</span>
+</code></pre></div></p>
+<p><strong>Option 3: Manual volume correction (if known)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># If you know actual contents, manually set counter</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">syringe</span><span class="o">.</span><span class="n">volume_counter</span> <span class="o">=</span> <span class="n">actual_volume</span>  <span class="c1"># Set to known value</span>
+</code></pre></div></p>
+<h3 id="volume-overflow-errors">Volume Overflow Errors</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Error message</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="ne">ValueError</span><span class="p">:</span> <span class="n">The</span> <span class="n">drawn</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">syringe</span> <span class="n">would</span> <span class="n">be</span> <span class="mi">1200</span> <span class="n">µl</span><span class="p">,</span> <span class="n">which</span> <span class="n">exceeds</span> <span class="n">the</span> <span class="n">syringe</span> <span class="n">capacity</span> <span class="n">of</span> <span class="mi">1000</span> <span class="n">µl</span><span class="err">!</span>
 </code></pre></div>
-<h2 id="key-parameters">Key Parameters</h2>
-<p><strong>Ports:</strong>
-    - waste_port: Most frequent access (position 1 recommended)
-    - air_port: Segmentation and cleaning
-    - transfer_port: Connection to analytical instrument
-    - di_port/meoh_port: Primary solvents</p>
-<p><strong>Volumes:</strong>
-- holding_coil_volume: Tube between syringe and valve (500-2000 µL)
-- transfer_line_volume: Dead volume to dispensing point (measure experimentally)
-- bubble_volume: Air separation bubbles (10-50 µL)</p>
-<p><strong>Speeds:</strong>
-- speed_air: Fast air operations (5000 µL/min)
-- speed_fast: Rapid transfers (3500 µL/min) 
-- speed_normal: Standard dispensing (2000 µL/min)
-- speed_slow: Precise operations (1500 µL/min)</p>
-<p><strong>Vials:</strong>
-- wash_vial: Needle cleaning (typically 48)
-- waste_vial: System waste collection (typically 50)</p>
-<h2 id="configuration-validation">Configuration Validation</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">SIA_API.methods</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_config</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">validate_config</span><span class="p">(</span><span class="n">custom_config</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p><strong>Solutions:</strong>
+- Check current volume: <code>syringe.print_volume_in_syringe()</code>
+- Use multiple cycles for large volumes
+- Empty syringe before large aspiration: <code>syringe.dispense()</code></p>
+<h3 id="volume-underflow-errors">Volume Underflow Errors</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Error message  </span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="ne">ValueError</span><span class="p">:</span> <span class="n">The</span> <span class="n">expelled</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">syringe</span> <span class="n">would</span> <span class="n">be</span> <span class="n">negative</span><span class="err">!</span>
 </code></pre></div>
-<p>Checks for duplicate ports, valid ranges, and parameter consistency.</p>
+<p><strong>Solutions:</strong>
+- Check actual syringe contents
+- Re-initialize if counter is wrong: <code>syringe.initialize()</code>
+- Use <code>syringe.dispense()</code> without volume to empty completely</p>
+<h2 id="flow-rate-errors">Flow Rate Errors</h2>
+<h3 id="speed-out-of-range">Speed Out of Range</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Error messages</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="ne">ValueError</span><span class="p">:</span> <span class="n">Set</span> <span class="n">flow</span> <span class="n">rate</span> <span class="n">too</span> <span class="n">small</span><span class="err">!</span> <span class="n">Minimum</span> <span class="n">allowed</span> <span class="n">rate</span> <span class="ow">is</span> <span class="mf">50.0</span> <span class="n">µL</span><span class="o">/</span><span class="nb">min</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="ne">ValueError</span><span class="p">:</span> <span class="n">Set</span> <span class="n">flow</span> <span class="n">rate</span> <span class="n">too</span> <span class="n">large</span><span class="err">!</span> <span class="n">Maximum</span> <span class="n">allowed</span> <span class="n">rate</span> <span class="ow">is</span> <span class="mf">60000.0</span> <span class="n">µL</span><span class="o">/</span><span class="nb">min</span>
+</code></pre></div>
+<p><strong>Solutions:</strong>
+- Check syringe size - limits depend on capacity
+- Use appropriate speed for syringe size:
+  - 100 µL syringe: 5-6000 µL/min
+  - 1000 µL syringe: 50-60000 µL/min
+  - 5000 µL syringe: 250-300000 µL/min</p>
+<h2 id="valve-position-errors">Valve Position Errors</h2>
+<h3 id="invalid-position">Invalid Position</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Error message</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="ne">ValueError</span><span class="p">:</span> <span class="n">Position</span> <span class="mi">10</span> <span class="ow">is</span> <span class="n">out</span> <span class="n">of</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Solutions:</strong>
+- Check valve configuration: number of positions
+- Verify position commands are within range
+- Use <code>valve.position(pos, num_attempts=5)</code> for reliability</p>
+<h3 id="valve-not-moving">Valve Not Moving</h3>
+<p><strong>Symptoms:</strong> No error but valve doesn't change position</p>
+<p><strong>Solutions:</strong>
+- Increase number of attempts: <code>valve.position(1, num_attempts=5)</code>
+- Check valve power supply
+- Test with manufacturer software
+- Verify command protocol (prefix/suffix)</p>
+<h2 id="system-performance-issues">System Performance Issues</h2>
+<h3 id="slow-operations">Slow Operations</h3>
+<p><strong>Causes:</strong> </p>
+<ul>
+<li>Transfer lines too long (air compression)</li>
+<li>Speed set too low</li>
+<li>Air bubbles in liquid lines</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Minimize air in transfer lines</li>
+<li>Replace air with liquid for long lines  </li>
+<li>Increase speed for non-critical operations</li>
+<li>Use shorter tubing when possible</li>
+</ul>
+<h3 id="inaccurate-volumes">Inaccurate Volumes</h3>
+<p><strong>Causes:</strong></p>
+<ul>
+<li>Air compression in long lines</li>
+<li>Dead volume not accounted for</li>
+<li>Speed too fast for viscous liquids</li>
+</ul>
+<p><strong>Solutions:</strong>
+- Measure actual transfer volumes experimentally
+- Use appropriate speeds for liquid viscosity
+- Account for dead volumes in calculations
+- Minimize air gaps in liquid lines</p>
+<h3 id="cross-contamination">Cross-Contamination</h3>
+<p><strong>Causes:</strong>
+- Insufficient cleaning between samples
+- Air bubbles not separating liquids properly
+- Inadequate flushing volumes</p>
+<p><strong>Solutions:</strong>
+- Increase bubble sizes between incompatible liquids
+- Use adequate cleaning volumes
+- Clean needle between sample types
+- Sequence from cleanest to dirtiest samples</p>
+<h3 id="quick-fixes">Quick Fixes</h3>
+<p><strong>Emergency Reset</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Complete system reset</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">syringe</span><span class="o">.</span><span class="n">emergency_stop</span><span class="p">()</span>  <span class="c1"># Stop all operations</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">valve</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>         <span class="c1"># Safe position</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">syringe</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>      <span class="c1"># Reset to home</span>
+</code></pre></div></p>
 
 
 
