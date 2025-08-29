@@ -1,0 +1,20 @@
+Name description
+
+local errorNumber, description$, line$
+
+parameter file_path$
+
+OPEN file_path$ FOR INPUT as #33
+errorNumber = 0
+ON ERROR errorNumber = 1
+While (errorNumber = 0)
+  INPUT #33, line$
+   !line$ = line$ + "\n"
+  description$ = description$ + line$
+EndWhile
+
+Close #33
+
+print description$
+
+endMacro
