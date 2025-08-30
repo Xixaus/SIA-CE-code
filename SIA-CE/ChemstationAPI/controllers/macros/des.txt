@@ -1,8 +1,0 @@
-DBS (10 ul blood, 10 µL IBU 1000 mg/L) diluted with 240 µL MEOH (manually). after 5 minuts 60 ul DI (SIA continual), left in the carousel for 30 min, then homogenized with air (23 sec, 2500 µL/min). add homogenization 15 minut on shaker 1000 rpm
-CE:
-75 um id capillary
-35 cm Ltot (ca 8,5 cm UV)
-BGE: 30 mM HAc / 30 mM NaAc / 15% ACN
-inj: -50 mbar x 10 s / INL end
--20 kV   /   25°C - not controlled
-Precondicionation: 5 sec /100 mM NaOH - 50 sec BGE
