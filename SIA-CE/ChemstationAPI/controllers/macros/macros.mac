@@ -1,0 +1,345 @@
+! ChemStation CE Control Macros
+! 
+! This file contains macros for CE instrument control, method execution,
+! sequence management, and system monitoring. Used by chemstation_controller.py
+! for automated CE operations.
+!
+! Author: Richard Maršala
+
+Name modify_and_run_method
+  ! Execute CE method with custom sample parameters using temporary register.
+  ! 
+  ! Creates a temporary method register, loads specified method, modifies sample
+  ! information (vial, name, comment), and executes analysis. Enables running
+  ! the same method on different samples without manual method file editing.
+  !
+  ! Adapted and modified from Agilent Community Forum:
+  ! https://community.agilent.com/technical/software/f/forum/9111/how-to-simply-get-a-list-of-register-and-commands-within-current-instrument-and-chemstation-version/29966
+  !
+  ! Process:
+  ! 1. Delete existing temporary register
+  ! 2. Create new TemporaryRegisterMethod register
+  ! 3. Load specified method and copy parameters
+  ! 4. Set custom vial number and sample information
+  ! 5. Execute analysis with modified parameters
+  !
+  ! Parameters:
+  !   VialNumber - Carousel position for sample (1-48)
+  !   SampleName$ - Descriptive name for sample (used in data filename)
+  !   method_name$ - Method filename to execute (with .M extension)
+  !   SampleCommentPath$ - Path to text file containing sample comment/description
+  !   data_subdirectory$ - Subdirectory for data organization (empty = use current)
+  !
+  ! Examples:
+  !   Run protein analysis: modify_and_run_method 15, "BSA_1mg_ml", "CE_Protein.M", "C:\Comments\protein.txt", "Proteins"
+  !   Quick analysis: modify_and_run_method 20, "Sample001", "Standard_CE.M", "", ""
+  !
+  ! Note: Data filename automatically generated with pattern <Date>_<Time>_<SampleN>
+
+  parameter VialNumber, SampleName$, method_name$, SampleCommentPath$, data_subdirectory$
+  local a, method$, SampleComment$
+
+  ! Delete existing legacy sample register if it exists
+  If (RegSize(TemporaryRegisterMethod) > 0) Then 
+    delReg TemporaryRegisterMethod
+  EndIf
+  
+  ! Create new register with analysis details
+  NewObj TemporaryRegisterMethod[1], 1, 0, 0
+  NewSampleInfo "TemporaryRegisterMethod[1]", "SampleInfo"
+  
+  ! Create method path - if no method specified, use current method
+  If (Len(method_name$) = 0) Then
+    method$ = _methfile$
+  ELSE
+    method$ = method_name$! + ".M"
+  EndIf
+
+  If (Len(SampleCommentPath$) = 0) Then
+    SampleComment$ = TabText$(_Config[1], "SampleInfo", 1, "SampleComment")
+  ELSE
+    OPEN SampleCommentPath$ FOR INPUT as #33
+    errorNumber = 0
+    CRLF$ = Chr$(13) + Chr$(10)    ! new line symbol
+    ON ERROR errorNumber = 1
+    While (errorNumber = 0)
+      INPUT #33, line$
+      SampleComment$ = SampleComment$ + line$ + CRLF$
+    EndWhile
+    Close #33
+  EndIf
+  
+  ! If no subdirectory specified, use current data subdirectory
+  IF (Len(data_subdirectory$) = 0) Then
+    data_subdirectory$ = _DATASUBDIR$
+  EndIf
+  
+  LoadMethod _methpath$, method$
+
+  ! Set path parameters
+  SetTabHdrText TemporaryRegisterMethod[1], "SampleInfo", "DataPath", _DATAPATH$
+  SetTabHdrText TemporaryRegisterMethod[1], "SampleInfo", "SubDirectory", data_subdirectory$
+  SetTabHdrText TemporaryRegisterMethod[1], "SampleInfo", "Method", _methpath$ + method$
+
+  ! Set sample parameters in the table
+  SetTabVal TemporaryRegisterMethod[1], "SampleInfo", 1, "VialNumber", VialNumber
+  SetTabText TemporaryRegisterMethod[1], "SampleInfo", 1, "SampleName", SampleName$
+  SetTabText TemporaryRegisterMethod[1], "SampleInfo", 1, "FileNamePattern", "<Date>_<Time>_<SampleN>"
+  SetTabText TemporaryRegisterMethod[1], "SampleInfo", 1, "SampleComment", SampleComment$
+  
+  ! Run the modified method
+  a = RunMethodFct(, "TemporaryRegisterMethod", 1, "SampleInfo", 1)
+  
+endMacro
+
+Name modify_row_sequence
+  ! Modify specific row parameters in the currently loaded sequence.
+  !
+  ! Allows selective modification of sequence parameters in a specific row
+  ! without affecting other rows. Useful for updating sample information,
+  ! changing vial positions, or modifying methods in existing sequences.
+  !
+  ! To add more modifiable parameters, examine the _SEQUENCE[1] register's 
+  ! SeqTable1 table structure using the register_reader.mac tool.
+  !
+  ! Parameters:
+  !   row - Row number in sequence to modify (1-based indexing)
+  !   VialNumber - New carousel position (1-48, empty = no change)
+  !   SampleName$ - New sample name (empty = no change)
+  !   method_name$ - New method filename (empty = no change)
+  !   Sample_Info$ - New sample information text (empty = no change)
+  !
+  ! Examples:
+  !   Change vial and sample: modify_row_sequence 5, 25, "New_Sample", "", ""
+  !   Update method only: modify_row_sequence 3, "", "", "Updated_Method.M", ""
+  !   Full row update: modify_row_sequence 1, 15, "BSA_Standard", "CE_Protein.M", "1mg/ml in buffer"
+  !
+  ! Note: Empty parameters are ignored (no modification). Sequence must be loaded first.
+
+  parameter row, VialNumber, SampleName$, method_name$, Sample_Info$ !, FilePath$
+
+  !LoadSequence seq_name$ ! Load the sequence
+
+  ! Modify parameters if they are provided (not empty)
+  If (Len(VialNumber) = 0) Then
+      ! do nothing
+  Else
+      SetTabVal _SEQUENCE[1], "SeqTable1", row, "Vial", VialNumber
+  EndIf
+
+  If (Len(SampleName$) = 0) Then
+
+  Else
+      SetTabText _SEQUENCE[1], "SeqTable1", row, "SampleName", SampleName$
+  EndIf
+  
+  If (Len(method_name$) = 0) Then
+
+  Else
+      SetTabText _SEQUENCE[1], "SeqTable1", row, "Method", method_name$
+  EndIf
+
+  If (Len(Sample_Info$) = 0) Then
+
+  Else
+      SetTabText _SEQUENCE[1], "SeqTable1", row, "SampleInfo", Sample_Info$
+  EndIf
+
+  ! If (Len(SampleName$) = 0) Then
+
+  ! Else
+  !     SetTabText _SEQUENCE[1], "SeqTable1", row, "DataFileName", FilePath$
+  ! EndIf
+
+  ! SaveSequence seq_name$ ! Save the modified sequence
+  
+endMacro
+
+Name modify_seq_table_by_excel
+  ! Import sequence parameters from Excel spreadsheet via DDE connection.
+  !
+  ! Reads sample information directly from an open Excel worksheet and populates
+  ! the ChemStation sequence table. Uses DDE (Dynamic Data Exchange) to communicate
+  ! with Excel and transfer data row by row. Excel must be open with data in Sheet1.
+  !
+  ! Excel Column Layout (Sheet1):
+  !   Column A (C1): VialNumber - Carousel position (1-48)  
+  !   Column B (C2): Method - Method filename
+  !   Column C (C3): SampleInfo - Sample description/concentration
+  !   Column D (C4): SampleName - Sample identifier for data files
+  !   Column E (C5): DataFilename - Custom data filename (currently disabled)
+  !   Column F (C6): InjVial - Injection vial number
+  !
+  ! Parameters:
+  !   numrows - Number of rows to import from Excel (starting from row 1)
+  !
+  ! Examples:
+  !   Import 10 samples: modify_seq_table_by_excel 10
+  !   Import full plate: modify_seq_table_by_excel 48
+  !
+  ! Requirements:
+  !   - Excel must be running with data in Sheet1
+  !   - Sequence must be loaded in ChemStation
+  !   - Data in Excel columns A-F format as specified above
+  !
+  ! Note: Sequence table is cleaned before import. Empty cells are ignored.
+  !       DataFilename parameter currently disabled (commented out).
+
+  Local row, VialNumber$, SampleName$, SampleInfo$, Method$, DataFilename$, InjVial$
+  parameter numrows
+
+  Clean_and_prepraration_Seqtable1 numrows
+
+  on Error CloseDDE
+
+  Chan = DDEInitiate("EXCEL", "Sheet1")
+
+  For row = 1 to numrows
+      DDERequest chan, "R" + Val$(row) + "C1", VialNumber$
+      DDERequest chan, "R" + Val$(row) + "C2", Method$
+      DDERequest chan, "R" + Val$(row) + "C3", SampleInfo$
+      DDERequest chan, "R" + Val$(row) + "C4", Samplename$
+      DDERequest chan, "R" + Val$(row) + "C5", DataFilename$
+      DDERequest chan, "R" + Val$(row) + "C6", InjVial$
+
+      If (Len(VialNumber$) = 0) Then
+          ! do nothing
+      Else
+          SetTabVal _SEQUENCE[1], "SeqTable1", row, "Vial", Val(VialNumber$)
+      EndIf
+
+      If (Len(SampleName$) = 0) Then
+      Else
+          SetTabText _SEQUENCE[1], "SeqTable1", row, "Method", Method$
+      EndIf
+      
+      If (Len(SampleInfo$) = 0) Then
+      Else
+          SetTabText _SEQUENCE[1], "SeqTable1", row, "SampleInfo", SampleInfo$
+      EndIf
+
+      If (Len(Samplename$) = 0) Then
+      Else
+          SetTabText _SEQUENCE[1], "SeqTable1", row, "SampleName", SampleName$
+      EndIf
+
+      ! If (Len(DataFilename$) = 0) Then
+      ! Else
+      !     SetTabText _SEQUENCE[1], "SeqTable1", row, "DataFileName", Filename$
+      ! EndIf
+
+      If (Len(InjVial) = 0) Then
+      Else
+          SetTabVal _SEQUENCE[1], "SeqTable1", row, "InjVial", Val(InjVial$)
+      EndIf
+    
+  Next row
+
+  DDETerminate Chan
+  
+  SetTabHdrText _SEQUENCE[1], "SeqParm", "DataNamePattern1","<Date>-<Time>-<SampleName>"
+  SetTabHdrText _SEQUENCE[1], "SeqParm", "DataSeqSubdir", "RM_SIA"
+  SetTabHdrText _SEQUENCE[1], "SeqParm", "SeqResName", "DBS_80%_MeOH"
+
+  ! SaveSequence _SEQFILE$
+
+
+EndMacro
+
+
+Name CloseDDE
+  ! Emergency DDE connection cleanup handler.
+  !
+  ! Called automatically when DDE operations encounter errors to ensure
+  ! proper cleanup of Excel connections. Prevents hanging DDE channels
+  ! that could interfere with subsequent Excel operations.
+  !
+  ! Usage: Automatically invoked by error handler in modify_seq_table_by_excel
+  !
+  ! Note: Critical for preventing Excel connection leaks during batch operations.
+
+  Local Button
+  DDETerminate Chan
+  Return
+EndMacro
+
+Name vialtable_export$
+  ! Export complete carousel vial occupancy status for system monitoring.
+  !
+  ! Scans all 50 carousel positions and returns their current occupancy status
+  ! as a formatted string. Essential for system monitoring, vial tracking,
+  ! and automated sample management workflows.
+  !
+  ! Return Format: "position:status, position:status, ..."
+  ! Example: "1:0, 2:1, 3:1, 4:0, 5:2, ..."
+  !
+  ! Status Codes:
+  !   0 - Empty position (no vial detected)
+  !   1 - Vial present in carousel position
+  !   2 - Vial loaded at inlet lift position
+  !   3 - Vial loaded at outlet lift position  
+  !   4 - Vial loaded at replenishment lift position
+  !
+  ! Returns: Complete carousel status string for all 48 positions
+  !
+  ! Examples:
+  !   Get full carousel status: vial_status$ = vialtable_export$()
+  !   Parse for specific vials: Use string parsing to extract individual positions
+  !
+  ! Note: Queries hardware directly via CE1 module TRAY:GETVIALSTATE command.
+  !       Status reflects real-time instrument state.
+
+  local vials$, occupied$, sep_position, get_vial_state$
+
+  vials$ = "" ! Initialize output string
+
+  For Vial = 1 to 50
+      ! Get vial status information from carousel
+      occupied$ = SendModule$("CE1", "TRAY:GETVIALSTATE? " + Val$(Vial))
+      sep_position = InStr(occupied$, ",")
+      get_vial_state$ = occupied$[(sep_position + 1)] ! Extract vial status from response
+
+      ! Add position and status to output string
+      vials$ = vials$ + Val$(Vial) + ":" + get_vial_state$ + ", "
+  Next Vial
+
+  return vials$
+
+endMacro
+
+
+Name Clean_and_prepraration_Seqtable1
+  ! Clean and initialize sequence table for new data import.
+  !
+  ! Removes all existing rows from the sequence table and creates the specified
+  ! number of new empty rows. Essential preparation step before importing
+  ! sequence data from external sources like Excel.
+  !
+  ! Process:
+  ! 1. Delete all existing rows in SeqTable1 (with error handling)
+  ! 2. Insert specified number of new empty rows
+  ! 3. Table ready for data population
+  !
+  ! Parameters:
+  !   num_rows - Number of empty rows to create in sequence table
+  !
+  ! Examples:
+  !   Prepare for 10 samples: Clean_and_prepraration_Seqtable1 10
+  !   Prepare full carousel: Clean_and_prepraration_Seqtable1 48
+  !
+  ! Note: Used internally by modify_seq_table_by_excel. Error handling ensures
+  !       complete table cleanup even if some rows cannot be deleted.
+
+  local ErrFlag
+  parameter num_rows
+
+  ErrFlag = 0
+
+  While (ErrFlag = 0)
+    On Error ErrFlag = 1 
+    DelTabRow _SEQUENCE[1], "SeqTable1", 1
+  EndWhile
+
+  InsTabRow _SEQUENCE[1], "SeqTable1", 1:num_rows
+
+endMacro
